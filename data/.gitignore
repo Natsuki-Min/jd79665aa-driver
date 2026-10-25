@@ -1,0 +1,4 @@
+# Keep the verified data files when this directory is used inside the
+# original experiment repository, whose .gitignore excludes *.bin.
+!mtp.bin
+!profile-*.bin

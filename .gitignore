@@ -1,0 +1,12 @@
+# Local builds and editor files
+**/build/
+**/build-*/
+**/__pycache__/
+*.py[cod]
+.venv/
+.vscode/
+.idea/
+.DS_Store
+
+# Optional full-stream exports; the five reference data/*.bin files are tracked.
+data/decoded-stream.*.bin
