@@ -14,7 +14,7 @@ RP2040 driver, R20 waveform LUT format and MTP LZ decoder for the **JD79665AA / 
 | --- | --- |
 | 把屏幕驱动起来 | [接线与 2bpp 格式](docs/01-panel-and-wiring.md)、[初始化字节和全刷流程](docs/02-init-and-refresh.md)、[Pico C 驱动](driver/README.md) |
 | 在指定位置更新图像 | [R83 窗口的坐标换算、紧排数据格式和示例](docs/03-image-and-window.md) |
-| 编写或分析波形 | [R20 字节映射、六路时序、11 B 状态和重复规则](docs/04-lut.md)、[Python 编解码工具](host/README.md) |
+| 编写或分析波形 | [R20 编码、状态与重复规则、电压轨名称对应和颗粒电性模型](docs/04-lut.md)、[Python 编解码工具](host/README.md) |
 | 研究原厂波形 | [MTP 的 LZ 格式与两张 535 B 表](docs/05-mtp.md)、[原始样本与实测对照数据](data/README.md) |
 | 继续探索快刷 | [实验路线与结果](docs/06-refresh-experiments.md)：为什么尝试、如何对照、观察到了什么，以及哪些思路仍有空间 |
 
