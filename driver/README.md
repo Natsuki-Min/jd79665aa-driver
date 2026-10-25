@@ -59,11 +59,10 @@ bool epd_power_off(void);            // 0x02
 
 这些 API 需要先调用 `epd_spi_init()`。调用窗口更新前需完成 `epd_init()` 和 `epd_power_on()`，结束时调用 `epd_power_off()`。错误恢复由调用方负责；示例程序在任一步失败后会尽力 POF，再复位。
 
-## 边界
+## 移植与扩展
 
-- 不写 MTP/OTP。
-- 不实现 R93/R92 回读。
-- 不实现自定义 R20 波形；它需要同时改 PSR/R01/PLL 和一张完整表，属于实验路径，见 `docs/04-lut.md`。
-- 初始化字节是实板验证值，不要按公开 datasheet 改。
+`epd.c` 将 SPI 命令和显示流程放在一起。移植到其他 MCU 时，替换 GPIO 初始化、SPI 发送、延时、时间获取和 BUSY 边沿记录，再保留初始化表及命令/数据事务边界。`main.c` 的测试图只依赖几何和 2bpp 打包规则，可用来检查颜色、方向和边距。
 
-完整说明：[初始化与全刷](../docs/02-init-and-refresh.md)、[R83 窗口](../docs/03-image-and-window.md)、[R20 波形](../docs/04-lut.md)。
+当前驱动使用原厂波形，提供全帧与窗口更新；R92/R93 读取和自定义 R20 加载可在这些 SPI 接口上继续扩展。R20 的数据布局和供电时序关系见 [波形章节](../docs/04-lut.md)。
+
+完整说明：[初始化与全刷](../docs/02-init-and-refresh.md)、[R83 窗口](../docs/03-image-and-window.md)、[控制器整体关系](../docs/00-overview.md)。

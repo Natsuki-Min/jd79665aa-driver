@@ -8,8 +8,7 @@
  * vertical bands (black / white / yellow / red) once at boot. Type 'r' in
  * the USB serial console to repeat, 's' to print status.
  *
- * Do not use this file to program MTP/OTP. It only sends normal display
- * commands and always powers off after a completed refresh.
+ * The demo uses the factory waveform and powers off after refresh.
  */
 #include <stdio.h>
 #include <string.h>

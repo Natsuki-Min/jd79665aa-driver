@@ -86,10 +86,26 @@ def main() -> int:
     # 6. Verify the manifest independently, including the raw dump.
     data_dir = HERE.parent / "data"
     entries = (data_dir / "SHA256SUMS").read_text().splitlines()
-    assert len(entries) == 5
+    assert len(entries) == 6
     for line in entries:
         digest, name = line.split()
         assert sha256((data_dir / name).read_bytes()) == digest, name
+
+    # Independent representatives/masks predate the MTP decompression result.
+    reference = json.loads((data_dir / "measured-reference.json").read_text())
+    actual = result["profiles"][1]["logical"]
+    values = bytes.fromhex(reference["values_logical_hex"])
+    assert len(values) == reference["table_bytes"] == len(actual) == 535
+    for key, count in (("inferred_mask_hex", 3194), ("candidate_mask_hex", 66)):
+        mask = bytes.fromhex(reference[key])
+        assert len(mask) == len(actual)
+        assert sum(bin(value).count("1") for value in mask) == count
+        assert all((a ^ b) & m == 0 for a, b, m in zip(actual, values, mask))
+    timing = [offset for offset in range(7, 535) if (offset - 7) % 11 not in (1, 2)]
+    assert len(timing) == 432
+    assert [(offset, values[offset], actual[offset]) for offset in timing
+            if values[offset] != actual[offset]] == [(534, 0, 1)]
+    assert actual[531:534] == b"\x00\x00\x00"  # Inactive D/E/F subgroup.
 
     # 7. Exercise a different, synthetic header and timing through the real CLI.
     # This must be refused by default, but parse with --allow-unknown without
@@ -125,6 +141,7 @@ def main() -> int:
             raise AssertionError("invalid or oversized stream was accepted")
 
     print("selftest: OK")
+    print("  reference : 3194 inferred + 66 candidate bits match; 431/432 timing bytes exact")
     print("  dump      : 4096 B, %s" % decode_mtp.KNOWN_SHA256)
     print("  LZ output : %d B, %d tokens" % (len(result["logical"]),
                                                len(result["decoded"].tokens)))

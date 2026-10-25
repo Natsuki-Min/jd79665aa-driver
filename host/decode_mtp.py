@@ -198,7 +198,7 @@ def main() -> int:
         print("OK: known dump, headers, lane totals and byte mapping verified")
     else:
         print("OK: stream parsed under the assumed two-profile layout; byte mapping verified")
-        print("UNKNOWN DUMP: reference headers/timings were not checked; hardware behavior is unverified")
+        print("UNKNOWN DUMP: reference headers/timings were not checked")
     return 0
 
 

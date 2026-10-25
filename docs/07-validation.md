@@ -1,6 +1,6 @@
 # 07 · 软件验证与复现
 
-本次整理验证日期：**2026-10-25**。下面记录的是随仓库交付的软件和样本检查，没有重新连接面板进行光学、电压或寿命实验。前几章的实板结论来自历史实验记录。
+软件验证日期：**2026-10-25**。以下命令检查随仓库提供的格式、样本和驱动构建；硬件实验的对照方法与结果见 [快刷实验](06-refresh-experiments.md)。
 
 所有命令均从本仓库根目录执行。
 
@@ -20,8 +20,9 @@ python3 host/show_profile.py --lane 5
 - 全部 256 个字节的编解码往返与已知单 bit 映射；
 - 11 B 状态的打包、字段解析和 108 扫描示例；
 - 真实 MTP 样本的哈希、LZ token 重新序列化、两张表及扫描总数；
-- 仓库内四个表文件与解码输出逐字节一致，以及五个文件的 SHA256SUMS；
-- 合成的不同头部/扫描数样本：默认拒绝，`--allow-unknown` 可按相同布局解码，且不冒充已知样本验证；
+- 仓库内四个表文件与解码输出逐字节一致，以及六个参考文件的 SHA256SUMS；
+- profile 1 与独立测量参照的 3194 个已辨识位、66 个候选位，以及 432 个时长字节的对照；
+- 合成的不同头部/扫描数样本：默认拒绝，`--allow-unknown` 可按相同布局解码，摘要中标记为未知样本；
 - LZ 重叠复制、截断输入、越界引用和输出上限。
 
 参考样本应得到：
@@ -44,7 +45,7 @@ cmp data/profile-01.logical.bin /tmp/jd79665-decoded/profile-01.logical.bin
 cmp data/profile-01.r20.wire.bin /tmp/jd79665-decoded/profile-01.r20.wire.bin
 ```
 
-`cmp` 成功时不输出文字。样本解码与这些比较可以离线复现；3194 个已辨识位、66 个候选位及历史 BUSY/VSL 对照所用的原始日志未收入本仓库。
+`cmp` 成功时不输出文字。`data/measured-reference.json` 提供独立测量代表值与位掩码，`selftest.py` 可复现其与解码表的比较；测量方法及掩码含义见 [MTP 实测对照](05-mtp.md#4-profile-1-和实测对上了什么)。
 
 ## 2. 固件构建
 
@@ -59,7 +60,7 @@ cmp data/profile-01.r20.wire.bin /tmp/jd79665-decoded/profile-01.r20.wire.bin
 | 构建类型 | Release，C11 |
 | 编译警告 | `-Wall -Wextra -Werror` |
 
-这些版本用于记录已验证环境，不是对其他版本兼容性的承诺。构建不烧写 MCU，也不访问面板。成功构建仅证明源码能编译链接，不能替代实板接线、BUSY、显示效果及故障恢复验证。
+这些版本记录了当前可构建环境，便于遇到工具链差异时对照。此次运行了软件构建与离线检查；整理后的程序尚未重新进行显示及错误恢复的实板测试。
 
 ## 3. 仍需硬件验证的部分
 
@@ -67,4 +68,4 @@ cmp data/profile-01.r20.wire.bin /tmp/jd79665-decoded/profile-01.r20.wire.bin
 - 解出的两张 535 B 表块在 R20 空间中的完整加载及 BUSY/VSL/光学对照；
 - 不同面板批次、温度档、供电与长期运行行为。
 
-来源和许可状态见 [NOTICE.md](../NOTICE.md)，实验边界见 [06-limits-and-safety.md](06-limits-and-safety.md)。
+来源见 [NOTICE.md](../NOTICE.md)，完整实验思路见 [快刷实验](06-refresh-experiments.md)。

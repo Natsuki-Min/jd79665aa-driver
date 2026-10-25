@@ -10,7 +10,7 @@ The stream starts at MTP offset 0x016. Bits and integers are LSB-first:
 The decoder output is in the empirical R20 **wire** byte order. Apply
 decode_byte() (from lut_codec.py) afterwards to get logical state bytes.
 
-No serial port, SPI, flash or panel access is used here.
+The module operates on byte strings.
 """
 from __future__ import annotations
 
